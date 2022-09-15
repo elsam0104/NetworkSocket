@@ -26,7 +26,7 @@ struct client_type {
 };
 
 const char OPTION_VALUE = 1;
-const int MAX_CLIENTS = 5;
+const int MAX_CLIENTS = 7;
 
 //전방선언
 int proocess_client(client_type& new_client, std::vector<client_type>& client_array, std::thread& thread);
@@ -35,7 +35,56 @@ int main();
 
 int proocess_client(client_type& new_client, std::vector<client_type>& client_array, std::thread& thread)
 {
-	//receive
+	std::string msg = "";
+	char tempmsg[DEFAULT_BUFLEN] = "";
+	
+	while (true)
+	{
+		memset(tempmsg, 0, DEFAULT_BUFLEN);
+
+		if (new_client.socket != 0)
+		{
+			int iResult = recv(new_client.socket, tempmsg, DEFAULT_BUFLEN, 0);
+
+			if (iResult != SOCKET_ERROR)
+			{
+				if (strcmp("", tempmsg))//보낸 메시지가 있을 떄(strcmp는 같으면 0 반환)
+				{
+					msg = "Client #" + std::to_string(new_client.id) + ": " + tempmsg;
+				}
+				std::cout << msg.c_str() << std::endl;
+
+				for (int i = 0; i < MAX_CLIENTS; i++)
+				{
+					if (new_client.id != i)//메시지를 보낸 애한텐 보낼필요 없으니 체크
+					{
+						iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
+					}
+				}
+			}
+			else //소켓이 나갔다면
+			{
+				msg = "Client #" + std::to_string(new_client.id) + "Disconnected";
+				std::cout << msg << std::endl;
+
+				closesocket(new_client.socket);
+				closesocket(client_array[new_client.id].socket);
+				client_array[new_client.id].socket = INVALID_SOCKET;
+
+				for (int i = 0; i < MAX_CLIENTS; i++)
+				{
+					if (client_array[i].socket != INVALID_SOCKET)
+					{
+						iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0); 
+						//얘들아 *번 소켓이 나갔대 웅성웅성
+					}
+				}
+				break;
+			}
+		}
+		thread.detach();
+		return 0;
+	}
 
 }
 
@@ -120,8 +169,8 @@ int main(void)
 			std::cout << "Client #" << client[temp_id].id << " Accepted" << std::endl;
 			msg = std::to_string(client[temp_id].id);
 			send(client[temp_id].socket, msg.c_str(), strlen(msg.c_str()), 0);
-				
-				my_thread[temp_id] = std::thread(proocess_client,std::ref(client[temp_id]),std::ref(client),std::ref(my_thread[temp_id]));
+
+			my_thread[temp_id] = std::thread(proocess_client, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
 		}
 		else
 		{
@@ -133,48 +182,17 @@ int main(void)
 	}
 
 	// No longer need server socket
-	closesocket(ListenSocket);
+	closesocket(server_socket);
 
-	// Receive until the peer shuts down the connection
-	do {
-
-		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-		if (iResult > 0) {
-			printf("Bytes received: %d\n", iResult);
-
-			// Echo the buffer back to the sender
-			iSendResult = send(ClientSocket, recvbuf, iResult, 0);
-			if (iSendResult == SOCKET_ERROR) {
-				printf("send failed with error: %d\n", WSAGetLastError());
-				closesocket(ClientSocket);
-				WSACleanup();
-				return 1;
-			}
-			printf("Bytes sent: %d\n", iSendResult);
-		}
-		else if (iResult == 0)
-			printf("Connection closing...\n");
-		else {
-			printf("recv failed with error: %d\n", WSAGetLastError());
-			closesocket(ClientSocket);
-			WSACleanup();
-			return 1;
-		}
-
-	} while (iResult > 0);
-
-	// shutdown the connection since we're done
-	iResult = shutdown(ClientSocket, SD_SEND);
-	if (iResult == SOCKET_ERROR) {
-		printf("shutdown failed with error: %d\n", WSAGetLastError());
-		closesocket(ClientSocket);
-		WSACleanup();
-		return 1;
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		my_thread[i].detach(); //자원 폐기하고 사라짐
+		closesocket(client[i].socket);
 	}
 
-	// cleanup
-	closesocket(ClientSocket);
 	WSACleanup();
+	std::cout << "Program has ended successfuly." << std::endl;
+
 
 	return 0;
 }
