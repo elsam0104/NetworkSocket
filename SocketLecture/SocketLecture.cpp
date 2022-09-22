@@ -82,10 +82,9 @@ int proocess_client(client_type& new_client, std::vector<client_type>& client_ar
 				break;
 			}
 		}
+	}
 		thread.detach();
 		return 0;
-	}
-
 }
 
 
@@ -129,7 +128,6 @@ int main(void)
 
 	setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &OPTION_VALUE, sizeof(int));
 	setsockopt(server_socket, IPPROTO_TCP, TCP_NODELAY, &OPTION_VALUE, sizeof(int));
-
 	std::cout << "Binding socket..." << std::endl;
 	bind(server_socket, server->ai_addr, (int)server->ai_addrlen);//주소 지정
 
@@ -153,7 +151,7 @@ int main(void)
 
 		for (int i = 0; i < MAX_CLIENTS; i++)
 		{
-			if (client[i].socket = INVALID_SOCKET && temp_id == -1)
+			if (client[i].socket == INVALID_SOCKET && temp_id == -1)
 			{
 				client[i].socket = incoming;
 				client[i].id = i;

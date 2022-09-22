@@ -1,0 +1,7 @@
+C:\Users\USER\Documents\GitHub\NetworkSocket\0922Program\bin\Debug\0922Program.exe.config
+C:\Users\USER\Documents\GitHub\NetworkSocket\0922Program\bin\Debug\0922Program.exe
+C:\Users\USER\Documents\GitHub\NetworkSocket\0922Program\bin\Debug\0922Program.pdb
+C:\Users\USER\Documents\GitHub\NetworkSocket\0922Program\obj\Debug\0922Program.csproj.AssemblyReference.cache
+C:\Users\USER\Documents\GitHub\NetworkSocket\0922Program\obj\Debug\0922Program.csproj.CoreCompileInputs.cache
+C:\Users\USER\Documents\GitHub\NetworkSocket\0922Program\obj\Debug\0922Program.exe
+C:\Users\USER\Documents\GitHub\NetworkSocket\0922Program\obj\Debug\0922Program.pdb
