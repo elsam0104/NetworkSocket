@@ -47,6 +47,65 @@ namespace ConsoleApplication
                 Console.WriteLine(ex.ToString());
             }
         }
+
+        public static TcpClient GetSocket(int id)
+        {
+            TcpClient socket = null;
+            if (clientList.ContainsKey(id))
+            {
+                HandleClient hc = clientList[id] as HandleClient;
+                socket = hc.clientSocket;
+            }
+            return socket;
+        }
+
+        public static void Broadcast(string msg, string uName, bool isClient)
+        {
+            mutex.WaitOne();
+            byte[] broadcastBytes = null;
+
+            if (isClient == true)
+            {
+                broadcastBytes = Encoding.ASCII.GetBytes(uName + "$" + msg);
+            }
+            else
+            {
+                broadcastBytes = Encoding.ASCII.GetBytes(msg);
+            }
+
+            foreach (DictionaryEntry Item in clientList)
+            {
+                TcpClient broadcastSocket;
+                HandleClient hc Item.Value as HandleClient;
+                broadcastSocket = hc.clientSocket;
+
+                NetworkStream broadcastStream = broadcastSocket.GetStream();
+
+                broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                broadcastStream.Flush();
+            }
+            mutex.ReleaseMutex();
+        }
+
+        public static void UserAdd(string clientNo, TcpClient clientSocket)
+        {
+            Broadcast(clientNo + "Joined", "", false);
+            Console.WriteLine(clientNo + "Joined chat room");
+        }
+
+        public static void UserLeft(int userId, string clientId)
+        {
+            if (clientList.Contains(userId))
+            {
+                Broadcast(clientId + "$#Left#", clientId, false);
+                Console.WriteLine("Client Left:" + clientId);
+
+                TcpClient clientSocket = GetSocket(userId);
+
+                clientList.Remove(userId);
+                clientSocket.Close();
+            }
+        }
     }
 
     public class HandleClient
