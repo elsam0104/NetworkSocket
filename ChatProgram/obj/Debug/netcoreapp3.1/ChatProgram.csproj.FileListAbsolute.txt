@@ -1,0 +1,14 @@
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\bin\Debug\netcoreapp3.1\ChatProgram.exe
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\bin\Debug\netcoreapp3.1\ChatProgram.deps.json
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\bin\Debug\netcoreapp3.1\ChatProgram.runtimeconfig.json
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\bin\Debug\netcoreapp3.1\ChatProgram.runtimeconfig.dev.json
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\bin\Debug\netcoreapp3.1\ChatProgram.dll
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\bin\Debug\netcoreapp3.1\ChatProgram.pdb
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\obj\Debug\netcoreapp3.1\ChatProgram.csproj.AssemblyReference.cache
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\obj\Debug\netcoreapp3.1\ChatProgram.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\obj\Debug\netcoreapp3.1\ChatProgram.AssemblyInfoInputs.cache
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\obj\Debug\netcoreapp3.1\ChatProgram.AssemblyInfo.cs
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\obj\Debug\netcoreapp3.1\ChatProgram.csproj.CoreCompileInputs.cache
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\obj\Debug\netcoreapp3.1\ChatProgram.dll
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\obj\Debug\netcoreapp3.1\ChatProgram.pdb
+C:\Users\USER\Documents\GitHub\NetworkSocket\ChatProgram\obj\Debug\netcoreapp3.1\ChatProgram.genruntimeconfig.cache

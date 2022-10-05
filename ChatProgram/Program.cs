@@ -2,10 +2,10 @@
 using System.Threading;
 using System.Net;
 using System.Net.Sockets;
-using System.text;
+using System.Text;
 using System.Collections;
 
-namespace ConsoleApplication
+namespace ChatProgram
 {
     class Program
     {
@@ -38,7 +38,7 @@ namespace ConsoleApplication
                     client.startClient(clientSocket, clientList, counter);
                 }
                 clientSocket.Close();
-                serverSocket.Close();
+                serverSocket.Stop();
                 Console.WriteLine("Exit..");
                 Console.ReadLine();
             }
@@ -66,17 +66,17 @@ namespace ConsoleApplication
 
             if (isClient == true)
             {
-                broadcastBytes = Encoding.ASCII.GetBytes(uName + "$" + msg);
+                broadcastBytes = Encoding.UTF8.GetBytes(uName + "$" + msg);
             }
             else
             {
-                broadcastBytes = Encoding.ASCII.GetBytes(msg);
+                broadcastBytes = Encoding.UTF8.GetBytes(msg);
             }
 
             foreach (DictionaryEntry Item in clientList)
             {
                 TcpClient broadcastSocket;
-                HandleClient hc Item.Value as HandleClient;
+                HandleClient hc = Item.Value as HandleClient;
                 broadcastSocket = hc.clientSocket;
 
                 NetworkStream broadcastStream = broadcastSocket.GetStream();
@@ -87,7 +87,7 @@ namespace ConsoleApplication
             mutex.ReleaseMutex();
         }
 
-        public static void UserAdd(string clientNo, TcpClient clientSocket)
+        public static void UserAdd(string clientNo)
         {
             Broadcast(clientNo + "Joined", "", false);
             Console.WriteLine(clientNo + "Joined chat room");
@@ -133,12 +133,64 @@ namespace ConsoleApplication
         bool socketConnected(Socket s)
         {
             bool part1 = s.Poll(1000, SelectMode.SelectRead);
-            bool part2 = s.Poll(s.Available == 0);
+            bool part2 = (s.Available == 0);
             if (part1 && part2)
             {
                 return false; // 연결 실패
             }
             return true; //연결 성공
+        }
+
+        private void doChat()
+        {
+            byte[] bytesForm = new byte[1024];
+            string dataFromClient = "";
+            NetworkStream networkStream = clientSocket.GetStream();
+
+            while (!noConnection)
+            {
+                try
+                {
+                    int numBytesRead;
+                    if (!socketConnected(clientSocket.Client))
+                        noConnection = true;
+                    else
+                    {
+                        if (networkStream.DataAvailable)
+                        {
+                            dataFromClient = "";
+                            while (networkStream.DataAvailable)
+                            {
+                                numBytesRead = networkStream.Read(bytesForm, 0, bytesForm.Length);
+                                dataFromClient = Encoding.UTF8.GetString(bytesForm, 0, numBytesRead);
+                            }
+                            int idx = dataFromClient.IndexOf("$");
+                            if (ClientId == null && idx > 0)
+                            {
+                                ClientId = dataFromClient.Substring(0, idx);
+                                Program.UserAdd(ClientId);
+                            }
+                            else if (idx > 0)
+                            {
+                                dataFromClient = dataFromClient.Substring(0, dataFromClient.Length - 1);
+                                Console.WriteLine("From Client - " + ClientId + " : ", dataFromClient);
+                                Program.Broadcast(dataFromClient, ClientId, true);
+                            }
+                            else
+                            {
+                                dataFromClient = "";
+                            }
+                        }
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    noConnection = true;
+                    Console.WriteLine("Error :" + e.ToString());
+                }
+            }
+            Program.UserLeft(userID, ClientId);
         }
     }
 }
