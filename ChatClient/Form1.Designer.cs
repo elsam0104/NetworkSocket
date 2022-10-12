@@ -31,10 +31,10 @@ namespace ChatClient
         {
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_connect = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btn_send = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -56,17 +56,18 @@ namespace ChatClient
             this.label1.Text = "Chat Name";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
-            // button1
+            // btn_connect
             // 
-            this.button1.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.button1.Font = new System.Drawing.Font("교보 손글씨 2019", 11F);
-            this.button1.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.button1.Location = new System.Drawing.Point(737, 71);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(183, 42);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Connect to Server";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btn_connect.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.btn_connect.Font = new System.Drawing.Font("교보 손글씨 2019", 11F);
+            this.btn_connect.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.btn_connect.Location = new System.Drawing.Point(737, 71);
+            this.btn_connect.Name = "btn_connect";
+            this.btn_connect.Size = new System.Drawing.Size(183, 42);
+            this.btn_connect.TabIndex = 2;
+            this.btn_connect.Text = "Connect to Server";
+            this.btn_connect.UseVisualStyleBackColor = false;
+            this.btn_connect.Click += new System.EventHandler(this.btn_connect_Click);
             // 
             // textBox2
             // 
@@ -84,17 +85,17 @@ namespace ChatClient
             this.textBox3.Size = new System.Drawing.Size(891, 26);
             this.textBox3.TabIndex = 4;
             // 
-            // button2
+            // btn_send
             // 
-            this.button2.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.button2.Font = new System.Drawing.Font("교보 손글씨 2019", 11F);
-            this.button2.Location = new System.Drawing.Point(744, 494);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(176, 34);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Send Message";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.btn_send.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.btn_send.Font = new System.Drawing.Font("교보 손글씨 2019", 11F);
+            this.btn_send.Location = new System.Drawing.Point(744, 494);
+            this.btn_send.Name = "btn_send";
+            this.btn_send.Size = new System.Drawing.Size(176, 34);
+            this.btn_send.TabIndex = 5;
+            this.btn_send.Text = "Send Message";
+            this.btn_send.UseVisualStyleBackColor = false;
+            this.btn_send.Click += new System.EventHandler(this.btn_send_Click);
             // 
             // label2
             // 
@@ -113,16 +114,17 @@ namespace ChatClient
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(942, 540);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.btn_send);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btn_connect);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
             this.Font = new System.Drawing.Font("교보 손글씨 2019", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Form1";
             this.Text = "Chat Client";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -133,10 +135,10 @@ namespace ChatClient
 
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_connect;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btn_send;
         private System.Windows.Forms.Label label2;
     }
 }

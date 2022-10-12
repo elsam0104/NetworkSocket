@@ -64,14 +64,10 @@ namespace ChatClient
         public Form1()
         {
             InitializeComponent();
+            //this.FormClosed += Form1_FormClosed;
         }
 
         private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
         {
 
         }
@@ -84,6 +80,34 @@ namespace ChatClient
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btn_connect_Click(object sender, EventArgs e)
+        {
+            readData = "Connected to Chat Server...";
+            msg();
+            clientSocket.Connect("localhost", 8888);
+            serverStream = clientSocket.GetStream();
+
+            byte[] outStream = Encoding.UTF8.GetBytes(textBox1.Text + '$');
+            serverStream.Write(outStream, 0, outStream.Length); //send
+            serverStream.Flush();
+
+            Thread ctThread = new Thread(getMessage);
+            ctThread.Start();
+        }
+        private void btn_send_Click(object sender, EventArgs e)
+        {
+            byte[] outStream = Encoding.UTF8.GetBytes(textBox3.Text + '$');
+            serverStream.Write(outStream, 0, outStream.Length);
+            serverStream.Flush();
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            stopRunning = true;
+            serverStream.Close();
+            clientSocket.Close();
         }
     }
 }
