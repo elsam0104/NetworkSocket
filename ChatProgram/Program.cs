@@ -33,7 +33,7 @@ namespace ChatProgram
                     counter = userCount++;
 
                     HandleClient client = new HandleClient();
-                    clientList.Add(counter, clientSocket);
+                    clientList.Add(counter, client);
 
                     client.startClient(clientSocket, clientList, counter);
                 }
