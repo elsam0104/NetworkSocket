@@ -173,7 +173,7 @@ namespace ChatProgram
                             else if (idx > 1)
                             {
                                 dataFromClient = dataFromClient.Substring(0, dataFromClient.Length - 1);
-                                Console.WriteLine("From Client - " + ClientId + " : ", dataFromClient);
+                                Console.WriteLine("From Client - " + ClientId + " : "+ dataFromClient);
                                 Program.Broadcast(dataFromClient, ClientId, true);
                             }
                             else
