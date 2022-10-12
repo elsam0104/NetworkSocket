@@ -170,7 +170,7 @@ namespace ChatProgram
                                 ClientId = dataFromClient.Substring(0, idx);
                                 Program.UserAdd(ClientId);
                             }
-                            else if (idx > 0)
+                            else if (idx > 1)
                             {
                                 dataFromClient = dataFromClient.Substring(0, dataFromClient.Length - 1);
                                 Console.WriteLine("From Client - " + ClientId + " : ", dataFromClient);

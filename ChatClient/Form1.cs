@@ -50,7 +50,7 @@ namespace ChatClient
                             numBytesRead = serverStream.Read(inStream, 0, inStream.Length);
                             returnData += Encoding.UTF8.GetString(inStream, 0, numBytesRead);
                         }
-                        readData += returnData;
+                        readData = returnData;
                         msg();
                     }
                 }
