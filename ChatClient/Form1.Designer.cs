@@ -40,9 +40,10 @@ namespace ChatClient
             // 
             // textBox1
             // 
+            this.textBox1.Font = new System.Drawing.Font("교보 손글씨 2019", 10F);
             this.textBox1.Location = new System.Drawing.Point(632, 26);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(288, 26);
+            this.textBox1.Size = new System.Drawing.Size(288, 28);
             this.textBox1.TabIndex = 0;
             // 
             // label1
@@ -75,14 +76,16 @@ namespace ChatClient
             this.textBox2.Location = new System.Drawing.Point(29, 140);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(891, 292);
             this.textBox2.TabIndex = 3;
             // 
             // textBox3
             // 
+            this.textBox3.Font = new System.Drawing.Font("교보 손글씨 2019", 10F);
             this.textBox3.Location = new System.Drawing.Point(29, 447);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(891, 26);
+            this.textBox3.Size = new System.Drawing.Size(891, 28);
             this.textBox3.TabIndex = 4;
             // 
             // btn_send

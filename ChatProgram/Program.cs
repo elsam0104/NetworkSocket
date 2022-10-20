@@ -33,6 +33,7 @@ namespace ChatProgram
                     counter = userCount++;
 
                     HandleClient client = new HandleClient();
+
                     clientList.Add(counter, client);
 
                     client.startClient(clientSocket, clientList, counter);
@@ -59,38 +60,63 @@ namespace ChatProgram
             return socket;
         }
 
-        public static void Broadcast(string msg, string uName, bool isClient)
+        public static void Broadcast(string msg, string uName, bool isClient, bool isHide = false, object userId = null)
         {
             mutex.WaitOne();
             byte[] broadcastBytes = null;
 
             if (isClient == true)
             {
-                broadcastBytes = Encoding.UTF8.GetBytes(uName + "$" + msg);
+                broadcastBytes = Encoding.UTF8.GetBytes(uName + "$ " + msg);
+            }
+            else if (isHide)
+            {
+                broadcastBytes = Encoding.UTF8.GetBytes(uName + "님의 귓속말 >> " + msg);
             }
             else
             {
-                broadcastBytes = Encoding.UTF8.GetBytes(msg);
+                broadcastBytes = Encoding.UTF8.GetBytes("[[공지사항 안내]]  " + msg);
             }
 
-            foreach (DictionaryEntry Item in clientList)
+            TcpClient broadcastSocket;
+
+            if (isHide)
             {
-                TcpClient broadcastSocket;
-                HandleClient hc = Item.Value as HandleClient;
-                broadcastSocket = hc.clientSocket;
+                foreach (DictionaryEntry Item in clientList)
+                {
+                    if (Item.Key == userId)
+                    {
+                        HandleClient hc = Item.Value as HandleClient;
+                        broadcastSocket = hc.clientSocket;
 
-                NetworkStream broadcastStream = broadcastSocket.GetStream();
+                        NetworkStream broadcastStream = broadcastSocket.GetStream();
 
-                broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
-                broadcastStream.Flush();
+                        broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                        broadcastStream.Flush();
+                    }
+                }
+                mutex.ReleaseMutex();
             }
-            mutex.ReleaseMutex();
+            else
+            {
+                foreach (DictionaryEntry Item in clientList)
+                {
+                    HandleClient hc = Item.Value as HandleClient;
+                    broadcastSocket = hc.clientSocket;
+
+                    NetworkStream broadcastStream = broadcastSocket.GetStream();
+
+                    broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                    broadcastStream.Flush();
+                }
+                mutex.ReleaseMutex();
+            }
         }
 
         public static void UserAdd(string clientNo)
         {
-            Broadcast(clientNo + "Joined", "", false);
-            Console.WriteLine(clientNo + "Joined chat room");
+            Broadcast(clientNo + "님이 접속하셨습니다. 미풍양속을 헤치는 발언은 재제대상이 됩니다.", "", false);
+            Console.WriteLine(clientNo + "님이 접속하셨습니다.");
         }
 
         public static void UserLeft(int userId, string clientId)
@@ -140,7 +166,23 @@ namespace ChatProgram
             }
             return true; //연결 성공
         }
+        private string Cut(string dataFromClient)
+        {
+            //재제
+            dataFromClient = dataFromClient.Replace("서린", "위대하신 서린 선생님");
+            dataFromClient = dataFromClient.Replace("서린쌤", "위대하신 서린 선생님");
+            dataFromClient = dataFromClient.Replace("네트워크쌤", "위대하신 서린 선생님");
+            dataFromClient = dataFromClient.Replace("ㅅㄹㅆ", "위대하신 서린 선생님");
+            dataFromClient = dataFromClient.Replace("ㅅㄹ", "위대하신 서린 선생님");
+            dataFromClient = dataFromClient.Replace("ㄴㅌㅇㅋㅆ", "위대하신 서린 선생님");
 
+            dataFromClient = dataFromClient.Replace("시발", "정말");
+            dataFromClient = dataFromClient.Replace("ㅅㅂ", "이런");
+            dataFromClient = dataFromClient.Replace("병신", "나쁜 아이");
+            dataFromClient = dataFromClient.Replace("ㅄ", "나쁜 아이");
+            dataFromClient = dataFromClient.Replace("ㅂㅅ", "나쁜 아이");
+            return dataFromClient;
+        }
         private void doChat()
         {
             byte[] bytesForm = new byte[1024];
@@ -164,17 +206,41 @@ namespace ChatProgram
                                 numBytesRead = networkStream.Read(bytesForm, 0, bytesForm.Length);
                                 dataFromClient = Encoding.UTF8.GetString(bytesForm, 0, numBytesRead);
                             }
+                            dataFromClient = Cut(dataFromClient);
                             int idx = dataFromClient.IndexOf("$");
+                            
                             if (ClientId == null && idx > 0)
                             {
                                 ClientId = dataFromClient.Substring(0, idx);
+                                foreach(DictionaryEntry item in clientList)
+                                {
+                                    if (ClientId == item.Key as string)
+                                    {
+                                        noConnection = true;
+                                        Program.Broadcast("중복 아이디입니다.", ClientId, true, true,ClientId);
+                                        continue;
+                                    }
+                                }
                                 Program.UserAdd(ClientId);
                             }
                             else if (idx > 1)
                             {
                                 dataFromClient = dataFromClient.Substring(0, dataFromClient.Length - 1);
-                                Console.WriteLine("From Client - " + ClientId + " : "+ dataFromClient);
-                                Program.Broadcast(dataFromClient, ClientId, true);
+                                Console.WriteLine("From Client - " + ClientId + " : " + dataFromClient);
+                                if (dataFromClient[0] == '쉿')
+                                {
+                                    object key = null;
+                                    foreach (DictionaryEntry Item in clientList)
+                                    {
+                                        if(dataFromClient.Contains(Item.Key.ToString()))
+                                        {
+                                            key = Item.Key;
+                                        }
+                                    }
+                                        Program.Broadcast(dataFromClient, ClientId, true, true,key);
+                                }
+                                else
+                                    Program.Broadcast(dataFromClient, ClientId, true);
                             }
                             else
                             {
