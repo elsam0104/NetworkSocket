@@ -109,5 +109,44 @@ namespace ChatClient
             serverStream.Close();
             clientSocket.Close();
         }
+
+        private void ClearButton_Click(object sender, EventArgs e)
+        {
+            textBox2.Text = "";
+        }
+
+        private void LogOutButton_Click(object sender, EventArgs e) //유저 로그아웃
+        {
+            stopRunning = true;
+            serverStream.Close();
+            clientSocket.Close();
+        }
+
+
+        private void ReportBtn_Click(object sender, EventArgs e)
+        {
+            byte[] outStream = Encoding.UTF8.GetBytes(ReportText.Text);
+
+            textBox2.Text = textBox2.Text + Environment.NewLine +  outStream + "님을 신고 신청 하였습니다."; //그러나 여기까지밖에 만들지 못하였다....
+
+            ReportText.ForeColor = Color.Gray;
+            ReportText.Text = "Plz enter user's name...";
+        }
+
+        private void ReportText_TextChanged(object sender, EventArgs e)
+        {
+            ReportText.ForeColor = Color.Black;
+        }
+
+        private void ConsentButton_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
